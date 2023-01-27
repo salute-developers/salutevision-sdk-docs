@@ -1,102 +1,120 @@
-# SaluteVision Mobile iOS SDK
+# SaluteVision Mobile Android SDK
 
-SDK алгоритмов компьютерного зрения для iOS.
+SDK алгоритмов компьютерного зрения для Android.
 
 SaluteVision Mobile SDK — это набор инструментов для решения задач с использованием компьютерного зрения.
 
-iOS SDK доступен в виде `smartcv-mobile.xcframework`.
-
-`xcframework` содержит зависимости под все целевые платформы и архитектуры в едином bundle.
+Бинарные файлы поставляются в виде AAR-архивов.
 
 **Поддерживаемые архитектуры:**
 
-- ios-arm64,
-- ios-x86_64-simulator.
+- `arm64-v8a`
+- `armeabi-v7a`
+- `x86`
+- `x86_64`
 
 
-## Работа с изображениями
+## Использование BarcodeRecognizer
 
-Работа с изображениями в iOS SDK осуществляется через класс `SmartVisionImage`.
+Модуль распознавания штрих-кодов. Выполняется распознавание только одного штрих-кода, находящегося в кадре.
 
-Чтобы создать экземпляр класса `SmartVisionImage`, передайте данные в конструктор в формате `CVPixelBuffer`.
-
-В большинстве случаев `CVPixelBuffer` — это стандартная сущность для получения фрейма с камеры телефона на платформе iOS.
-
-Также `SmartVisionImage` поддерживает конвертацию в `UIImage`.
-
-## Подключение
-
-Для подключения библиотеки и доступа к моделям SDK используется стандартная команда:
+1. Подключите библиотеку в `build.gradle`: 
 
 ```
-import SmartVision
+implementation files('libs/smartcv-mobile.aar')
 ```
 
-## Использование SDK
-
-Вся функциональность SDK поставляется в виде независимых классов. Например: `BarcodeReader`, `MRZReader`.
-
-Каждый из классов может быть использован как независимо, так и в сочетании с другими. 
-
-## Использование BarcodeReader
-
-1. Создайте экземляр класса:
+2. Импортируйте необходимые объекты:
 
 ```
-private let reader = BarcodeReader(formats: [
-.qr,
-.aztec
-])
+import ru.sberdevices.smartcv.barcode.BarcodeRecognizer
 ```
 
-2. Создайте экземпляр класса `SmartVisionImage`:
+3. Создайте распознаватель кодов:
 
 ```
-let pixelBuffer = ... // получить CVPixelBuffer
-let image = SmartVisionImage(pixelBuffer: pixelBuffer)
+private val recognizer = BarcodeRecognizer()
 ```
 
-3. Запустите процесс распознавания и обработайте результат:
+4. В обработчике фрейма камеры отправьте кадр на распознавание и получите результат:
 
 ```
-guard let result = reader.read(image: image) else {
-print("Empty result")
-return
+// Анализ кадра
+val codes = recognizer.process(
+SmartVisionImage(
+baseContext,
+image,
+imageProxy.imageInfo.rotationDegrees
+)
+)
+// Обработка результатов
+if (!codes.isNullOrEmpty()) {
+//...
 }
+```
+
+## Использование MrzRecognizer
+
+1. Подключите библиотеку в `build.gradle`:
+
+```
+implementation files('libs/smartcv-mobile.aar')
+```
+
+2. Импортируйте необходимые объекты: 
+
+```
+import ru.sberdevices.smartcv.mrz.MrzRecognizer
+```
+
+3. Создайте экземпляр распознавателя и инициализируйте его. Не забудьте удалить подписку, например, в методе `onDestroy`:
+
+```
+private lateinit var recognizer: MrzRecognizer
  
-// вывод информации о типе баркода и результат распознавания
-print("Result did obtain, type: \(result.format.rawValue), result: \(result.text)")
-```
-
-## Использование MRZReader
-
-1. Создайте экземляр класса:
-
-```
-private let reader = MRZReader(fromFile: ModelRepository.paddleOCRV2)
-```
-
-2. Добавьте `observer` (класс должен быть отнаследован от `MRZReaderObserver`):
-
-```
-reader.registerObserver(self)
-```
-
-3. Создайте экземпляр класса `SmartVisionImage`:
-
-```
-let pixelBuffer = ... // получить CVPixelBuffer
-let image = SmartVisionImage(pixelBuffer: pixelBuffer)
-```
-
-4. Запустите процесс распознавания и получите геометрию локализации:
-
-```
-let geometries = reader.read(image: image)
-Сам результат распознавания приходит наблюдателю (observer) в методе `func infoDidObtain(_ info: MRZInfo)`:
-
-func infoDidObtain(_ info: MRZInfo) {
-    print("His name is \(info.name) and he is from \(info.country)")  
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    recognizer = MrzRecognizer(this)
+}
+override fun onDestroy() {
+    super.onDestroy()
+    recognizer.unregisterObserver()
 }
 ```
 
+4. Подпишитесь на получение данных:
+
+```
+recognizer.registerObserver {
+    // Обработайте it
+}
+```
+
+`it` — это объект класса `MrzRecord` со следующей структурой:
+
+```
+data class MrzRecord(
+    val doc_type_code: String,
+    val name: String,
+    val last_name: String,
+    val gender: String,
+    val nationality: String,
+    val country: String,
+    val birth_date: String,
+    val personal_number: String,
+    val document_number: String,
+    val expiry_date: String
+)
+```
+
+5. Отправьте изображение на распознавание:
+
+```
+recognizer.process(
+    SmartVisionImage(
+        baseContext,
+        image,
+        imageProxy.imageInfo.rotationDegrees
+    )
+)
+```
