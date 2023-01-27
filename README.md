@@ -21,13 +21,13 @@ SaluteVision Mobile SDK — это набор инструментов для р
 1. Подключите библиотеку в `build.gradle`: 
 
 ```
-implementation files('libs/smartcv-mobile.aar')
+implementation files('libs/salutecv-mobile.aar')
 ```
 
 2. Импортируйте необходимые объекты:
 
 ```
-import ru.sberdevices.smartcv.barcode.BarcodeRecognizer
+import ru.sberdevices.salutecv.barcode.BarcodeRecognizer
 ```
 
 3. Создайте распознаватель кодов:
@@ -58,13 +58,13 @@ if (!codes.isNullOrEmpty()) {
 1. Подключите библиотеку в `build.gradle`:
 
 ```
-implementation files('libs/smartcv-mobile.aar')
+implementation files('libs/salutecv-mobile.aar')
 ```
 
 2. Импортируйте необходимые объекты: 
 
 ```
-import ru.sberdevices.smartcv.mrz.MrzRecognizer
+import ru.sberdevices.salutecv.mrz.MrzRecognizer
 ```
 
 3. Создайте экземпляр распознавателя и инициализируйте его. Не забудьте удалить подписку, например, в методе `onDestroy`:
