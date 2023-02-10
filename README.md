@@ -4,7 +4,7 @@ SDK алгоритмов компьютерного зрения для iOS.
 
 SaluteVision Mobile SDK — это набор инструментов для решения задач с использованием компьютерного зрения.
 
-iOS SDK доступен в виде `smartcv-mobile.xcframework`.
+iOS SDK доступен в виде `salutevision-mobile.xcframework`.
 
 `xcframework` содержит зависимости под все целевые платформы и архитектуры в едином bundle.
 
@@ -16,20 +16,20 @@ iOS SDK доступен в виде `smartcv-mobile.xcframework`.
 
 ## Работа с изображениями
 
-Работа с изображениями в iOS SDK осуществляется через класс `SmartVisionImage`.
+Работа с изображениями в iOS SDK осуществляется через класс `SaluteVisionImage`.
 
-Чтобы создать экземпляр класса `SmartVisionImage`, передайте данные в конструктор в формате `CVPixelBuffer`.
+Чтобы создать экземпляр класса `SaluteVisionImage`, передайте данные в конструктор в формате `CVPixelBuffer`.
 
 В большинстве случаев `CVPixelBuffer` — это стандартная сущность для получения фрейма с камеры телефона на платформе iOS.
 
-Также `SmartVisionImage` поддерживает конвертацию в `UIImage`.
+Также `SaluteVisionImage` поддерживает конвертацию в `UIImage`.
 
 ## Подключение
 
 Для подключения библиотеки и доступа к моделям SDK используется стандартная команда:
 
 ```
-import SmartVision
+import SaluteVision
 ```
 
 ## Использование SDK
