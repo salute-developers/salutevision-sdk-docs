@@ -41,7 +41,7 @@ private val recognizer = BarcodeRecognizer()
 ```
 // Анализ кадра
 val codes = recognizer.process(
-SmartVisionImage(
+SaluteVisionImage(
 baseContext,
 image,
 imageProxy.imageInfo.rotationDegrees
@@ -111,7 +111,7 @@ data class MrzRecord(
 
 ```
 recognizer.process(
-    SmartVisionImage(
+    SaluteVisionImage(
         baseContext,
         image,
         imageProxy.imageInfo.rotationDegrees
