@@ -21,13 +21,13 @@ SaluteVision Mobile SDK — это набор инструментов для р
 1. Подключите библиотеку в `build.gradle`: 
 
 ```
-implementation files('libs/salutecv-mobile.aar')
+implementation files('libs/salutevision-mobile-public-1.0.0.aar')
 ```
 
 2. Импортируйте необходимые объекты:
 
 ```
-import ru.sberdevices.salutecv.barcode.BarcodeRecognizer
+import ru.sberdevices.salutevision.barcode.BarcodeRecognizer
 ```
 
 3. Создайте распознаватель кодов:
@@ -41,16 +41,16 @@ private val recognizer = BarcodeRecognizer()
 ```
 // Анализ кадра
 val codes = recognizer.process(
-SaluteVisionImage(
-baseContext,
-image,
-imageProxy.imageInfo.rotationDegrees
-)
-)
-// Обработка результатов
-if (!codes.isNullOrEmpty()) {
-//...
-}
+    SaluteVisionImage(
+        baseContext,
+        image,
+        imageProxy.imageInfo.rotationDegrees
+        )
+    )
+    // Обработка результатов
+    if (!codes.isNullOrEmpty()) {
+        //...
+    }
 ```
 
 ## Использование MrzRecognizer
@@ -58,35 +58,31 @@ if (!codes.isNullOrEmpty()) {
 1. Подключите библиотеку в `build.gradle`:
 
 ```
-implementation files('libs/salutecv-mobile.aar')
+implementation files('libs/salutevision-mobile-public-1.0.0.aar')
 ```
 
 2. Импортируйте необходимые объекты: 
 
 ```
-import ru.sberdevices.salutecv.mrz.MrzRecognizer
+import ru.sberdevices.salutevision.mrz.MrzRecognizer
 ```
 
-3. Создайте экземпляр распознавателя и инициализируйте его. Не забудьте удалить подписку, например, в методе `onDestroy`:
+3. Создайте экземпляр распознавателя:
 
 ```
-private lateinit var recognizer: MrzRecognizer
- 
-override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    recognizer = MrzRecognizer(this)
-}
-override fun onDestroy() {
-    super.onDestroy()
-    recognizer.unregisterObserver()
-}
+private val recognizer = MrzRecognizer()
 ```
 
-4. Подпишитесь на получение данных:
+4. Подпишитесь на получение данных. Не забудьте удалить подписку, например, в методе `onDestroy`:
 
 ```
 recognizer.registerObserver {
     // Обработайте it
+}
+
+override fun onDestroy() {
+    super.onDestroy()
+    recognizer.unregisterObserver()
 }
 ```
 
