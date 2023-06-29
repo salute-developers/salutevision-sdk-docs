@@ -11,7 +11,9 @@ iOS SDK доступен в виде `salutevision-mobile.xcframework`.
 **Поддерживаемые архитектуры:**
 
 - ios-arm64,
-- ios-x86_64-simulator.
+- ios-x86_64-simulator,
+- ios-arm64-simulator.
+
 
 
 ## Работа с изображениями
